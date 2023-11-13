@@ -1,4 +1,5 @@
 import pdb
+import re
 
 import requests
 from bs4 import BeautifulSoup
@@ -33,14 +34,37 @@ def extract_recipe_details(url):
         name = item.find("span", {"data-ingredient-name": "true"}).get_text(strip=True)
         ingredients.append(f"{quantity} {unit} {name}".strip())
 
+    # instruction steps
     steps = []
     steps_items = soup.find_all('p',  class_="comp mntl-sc-block mntl-sc-block-html")
     for item in steps_items:
         steps.append(item.get_text(strip=True))
 
-    print(ingredients)
-    print('-----------------------')
-    print(steps)
+    # save ingredients and steps
+    with open("data/steps.txt", "w", encoding='utf-8') as file:
+        for step in steps:
+            file.write(f"{step}\n")
+    with open("data/ingredients.txt", "w", encoding='utf-8') as file:
+        for ingredient in ingredients:
+            file.write(f"{ingredient}\n")
+
+
+def get_tools(path):
+    kitchen_tools = []
+    with open(path, 'r', encoding='utf-8') as file:
+        steps = file.readlines()
+    with open("data/Kitchentools.txt", 'r', encoding='utf-8') as file:
+        tools = file.readlines()
+        for tool in tools:
+            kitchen_tools.append(tool[:-1].lower())
+
+    print(kitchen_tools)
+    result = []
+    for step in steps:
+        tools_found = set(re.findall('|'.join(kitchen_tools), step))
+        result.append(tools_found)
+
+    print(result)
 
 
 if __name__ == '__main__':
@@ -53,5 +77,7 @@ if __name__ == '__main__':
     #     for title, link in recipes:
     #         file.write(f"{title} && {link}\n")
 
-    url = "https://www.allrecipes.com/recipe/262717/indian-chole-aloo-tikki/"
-    extract_recipe_details(url)
+    # url = "https://www.allrecipes.com/recipe/262717/indian-chole-aloo-tikki/"
+    # extract_recipe_details(url)
+
+    get_tools("data/steps.txt")
