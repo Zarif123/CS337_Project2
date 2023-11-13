@@ -22,10 +22,10 @@ def extract_recipe_details(url):
     # pdb.set_trace()
     soup = BeautifulSoup(response.content, 'html.parser')
 
-    # 找到所有食材列表项
+    # find all the ingredients
     ingredients_list_items = soup.find_all("li", class_="mntl-structured-ingredients__list-item")
 
-    # 提取食材的数量、单位和名称
+    # extract numbers and materials
     ingredients = []
     for item in ingredients_list_items:
         quantity = item.find("span", {"data-ingredient-quantity": "true"}).get_text(strip=True)
