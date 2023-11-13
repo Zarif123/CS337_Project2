@@ -12,58 +12,46 @@ from bs4 import BeautifulSoup
 #         self.ingredients = ingredients
 #         self.tools = tools
 
+def extract_recipe_details(url):
 
-def fetch_recipe_titles_and_links(url):
     response = requests.get(url)
     if response.status_code != 200:
         print(f"Error retrieving page: Status code {response.status_code}")
         return None
 
+    # pdb.set_trace()
     soup = BeautifulSoup(response.content, 'html.parser')
-    recipes = []
 
-    for card in soup.find_all("a", class_=lambda value: value and "mntl-card-list-items" in value):
-        title_element = card.find("span", class_="card__title-text")
-        if title_element:
-            title = title_element.text.strip()
-            link = card.get('href')
-            recipes.append((title, link))
+    # 找到所有食材列表项
+    ingredients_list_items = soup.find_all("li", class_="mntl-structured-ingredients__list-item")
 
-    return recipes
+    # 提取食材的数量、单位和名称
+    ingredients = []
+    for item in ingredients_list_items:
+        quantity = item.find("span", {"data-ingredient-quantity": "true"}).get_text(strip=True)
+        unit = item.find("span", {"data-ingredient-unit": "true"}).get_text(strip=True)
+        name = item.find("span", {"data-ingredient-name": "true"}).get_text(strip=True)
+        ingredients.append(f"{quantity} {unit} {name}".strip())
 
+    steps = []
+    steps_items = soup.find_all('p',  class_="comp mntl-sc-block mntl-sc-block-html")
+    for item in steps_items:
+        steps.append(item.get_text(strip=True))
 
-def extract_recipe_details(path):
-    recipes_data = {}
-
-    with open('data/recipes_links.txt', 'r', encoding='utf-8') as files:
-        lines = files.readlines()
-
-        for line in lines:
-            recipes_data[line.split('&&')[0]] = line.split('&&')[1]
-
-        # print(recipes_data)
-        fetched_recipes = {}
-        # pdb.set_trace()
-
-        for title in recipes_data.keys():
-            response = requests.get(recipes_data[title])
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
-                recipe_content = soup.find("div", class_="recipe-content")
-                if recipe_content:
-                    fetched_recipes[title] = recipe_content.get_text(strip=True)
-            else:
-                print(f"Error retrieving recipe for {title}: Status code {response.status_code}")
+    print(ingredients)
+    print('-----------------------')
+    print(steps)
 
 
 if __name__ == '__main__':
-    recipes = fetch_recipe_titles_and_links('https://www.allrecipes.com')
-    for title, link in recipes:
-        print(f"Recipe: {title} - Link: {link}")
+    # recipes = fetch_recipe_titles_and_links('https://www.allrecipes.com')
+    # for title, link in recipes:
+    #     print(f"Recipe: {title} - Link: {link}")
 
-    output_file_path = 'data/recipes_links.txt'
-    with open(output_file_path, 'w') as file:
-        for title, link in recipes:
-            file.write(f"{title} && {link}\n")
+    # output_file_path = 'data/recipes_links.txt'
+    # with open(output_file_path, 'w') as file:
+    #     for title, link in recipes:
+    #         file.write(f"{title} && {link}\n")
 
-    extract_recipe_details('data/recipes_links.txt')
+    url = "https://www.allrecipes.com/recipe/262717/indian-chole-aloo-tikki/"
+    extract_recipe_details(url)
