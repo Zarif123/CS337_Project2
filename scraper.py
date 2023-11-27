@@ -27,7 +27,9 @@ def extract_recipe_details(url):
 
     # instruction steps
     steps = []
-    steps_items = soup.find_all('p',  class_="comp mntl-sc-block mntl-sc-block-html")
+
+    ol = soup.find('ol', class_="comp mntl-sc-block-group--OL mntl-sc-block mntl-sc-block-startgroup")
+    steps_items = ol.find_all('p',  class_="comp mntl-sc-block mntl-sc-block-html")
     for item in steps_items:
         steps.append(item.get_text(strip=True))
 

@@ -1,5 +1,7 @@
+oven
+oven
 skillet
-cup
-pot
-cup
+plate
+pan
+skillet
 skillet
