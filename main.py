@@ -58,7 +58,7 @@ def main():
     while in_chat_mode:
 
         # Search patterns
-        show_pattern = re.compile(r'\bshow\b', re.IGNORECASE)
+        show_pattern = re.compile(r'\b(show|what)\b', re.IGNORECASE)
         ingredients_pattern = re.compile(r'\bingredients\b', re.IGNORECASE)
         tools_pattern = re.compile(r'\btools\b', re.IGNORECASE)
         actions_pattern = re.compile(r'\bactions\b', re.IGNORECASE)
