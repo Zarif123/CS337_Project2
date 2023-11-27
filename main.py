@@ -44,7 +44,8 @@ def main():
             print("\nHere are the actions:")
             view_list(actions)
         elif query == "5":
-            print("\nstepping through the recipe")
+            print("\nI can help you walk through the steps here!")
+            step()
         elif query == "6":
             print("\nYou've enabled free form chat!")
             print("You type out questions in sentences rather than entering numbers now")
@@ -63,6 +64,9 @@ def main():
         actions_pattern = re.compile(r'\bactions\b', re.IGNORECASE)
         steps_pattern = re.compile(r'\bsteps\b', re.IGNORECASE)
 
+        how_to_pattern = re.compile(r'\bhow (do|can|could) I\b', re.IGNORECASE)
+        what_is_pattern = re.compile(r'\bwhat is\b', re.IGNORECASE)
+
         chat = input("\nHow can I assist you?\n")
         if show_pattern.search(chat):
             if ingredients_pattern.search(chat):
@@ -77,6 +81,17 @@ def main():
             elif steps_pattern.search(chat):
                 print("\nHere I'll show you the steps list:")
                 view_list(steps)
+
+        elif how_to_pattern.search(chat):
+            how_to_query = chat[how_to_pattern.search(chat).end():]
+            print("Here is how you can do that!\n")
+            how_to_url = build_url(how_to_query.strip('.?!'), 'youtube')
+            print(how_to_url)
+
+        elif what_is_pattern.search(chat):
+            print("Here is what I've found!\n")
+            format_url = build_url(chat.strip('.?!'), 'google')
+            print(format_url)
 
 if __name__ == "__main__":
     main()
