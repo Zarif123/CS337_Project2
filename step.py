@@ -1,18 +1,9 @@
-def parse_cooking_action(recipe_step):
-    return ""
-
-def parse_tools(recipe_step):
-    return ""
-
-def parse_ingredients(recipe_step):
-    return ""
-
-def parse_step(recipe_step):
-    print(f"Ingredients in this step are: {parse_ingredients(recipe_step)}")
-    print(f"Tools in this step are: {parse_tools(recipe_step)}")
-    print(f"Cooking actions in this step are: {parse_cooking_action(recipe_step)}")
-
-def step(recipe_steps):
+def step():
+    recipe_steps = []
+    with open("data/steps.txt", "r", encoding='utf-8') as file:
+        for step in file.readlines():
+            recipe_steps.append(step)
+            
     in_console = True
     index = 0
     while in_console:
