@@ -5,6 +5,9 @@ def view_list(recipe_item):
     for i in recipe_item:
         print(i)
 
+def seconds_to_minutes(sec):
+    return sec / 60
+
 def build_url(query, website):
     formatted_query = "+".join(query.split())
     if website == "youtube":
@@ -55,6 +58,11 @@ def step_util(ingredients, steps, tools, actions, stepping):
     forward_pattern = re.compile(r'\bgo to the next\b', re.IGNORECASE)
     take_me_pattern = re.compile(r'\bthe\s+(\w+)\s+step\b', re.IGNORECASE)
     ordinal_pattern = re.compile(r'\b(\d+)(st|nd|rd|th)\b', re.IGNORECASE)
+    how_much_pattern = re.compile(r'how much(?: of)?', re.IGNORECASE)
+    how_long_pattern = re.compile(r'how long?', re.IGNORECASE)
+    time_range_pattern = re.compile(r'\b(\d+)\s+to\s+(\d+)\s+(\w+)\b', re.IGNORECASE)
+    single_time_pattern = re.compile(fr'\b(\w+)\b(?=\s(?:{"|".join(time_words)}))')
+    when_done_pattern = re.compile(r'\bwhen is (it|this) (done|complete|finished)\b', re.IGNORECASE)
 
     index = 0
     print("Here is the first step:")
@@ -88,6 +96,24 @@ def step_util(ingredients, steps, tools, actions, stepping):
                 index = number
                 print("\n"+steps[index])
 
+        elif when_done_pattern.search(chat) or how_long_pattern.search(chat):
+            total_time = 0
+            time_range = time_range_pattern.findall(steps[index])
+            for times in time_range:
+                try:
+                    total_time += ((int(times[0]) + int(times[1])) / 2) * time_map[times[2]]
+                except:
+                    total_time += 0
+                    
+            single_times = single_time_pattern.findall(chat)
+            for times in single_times:
+                try:
+                    total_time += int(times[0]) * time_map[times[1]]
+                except:
+                    total_time += 0
+            total_time = seconds_to_minutes(total_time)
+            print(f"This step takes an average of {total_time} minutes")
+            
         elif chat.lower() == "q":
             print('\nExiting step mode')
             stepping = False            

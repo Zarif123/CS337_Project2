@@ -20,3 +20,14 @@ number_words = {
     "nineteenth": 19,
     "twentieth": 20,
 }
+
+time_map = {
+    'seconds': 1,
+    'minutes': 60,
+    'hours': 360,
+    'second': 1,
+    'minute': 60,
+    'hour': 360,
+}
+
+time_words = {'seconds', 'second', 'minutes', 'minute', 'hour', 'hours', 'day', 'days'}
