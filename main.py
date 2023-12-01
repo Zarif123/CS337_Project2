@@ -8,7 +8,7 @@ def main():
     asking_url = True
     print("Hello, if you give me a URL for a recipe from AllRecipes.com, I can walk you through it!")
     while asking_url:
-        url = input("Please specify your URL here: ")
+        url = "https://www.allrecipes.com/recipe/281219/skillet-chicken-thighs-with-carrots-and-potatoes/"#input("Please specify your URL here: ")
         if extract_recipe_details(url) == False:
             print("Uh oh there was an error retrieving your recipe, please enter a valid url!")
             continue
@@ -45,7 +45,7 @@ def main():
             view_list(actions)
         elif query == "5":
             print("\nI can help you walk through the steps here!")
-            step()
+            step(ingredients, steps, tools, actions)
         elif query == "6":
             print("\nYou've enabled free form chat!")
             print("You type out questions in sentences rather than entering numbers now")
@@ -56,42 +56,8 @@ def main():
     
     in_chat_mode = True
     while in_chat_mode:
-
-        # Search patterns
-        show_pattern = re.compile(r'\b(show|what)\b', re.IGNORECASE)
-        ingredients_pattern = re.compile(r'\bingredients\b', re.IGNORECASE)
-        tools_pattern = re.compile(r'\btools\b', re.IGNORECASE)
-        actions_pattern = re.compile(r'\bactions\b', re.IGNORECASE)
-        steps_pattern = re.compile(r'\bsteps\b', re.IGNORECASE)
-
-        how_to_pattern = re.compile(r'\bhow (do|can|could) I\b', re.IGNORECASE)
-        what_is_pattern = re.compile(r'\bwhat is\b', re.IGNORECASE)
-
         chat = input("\nHow can I assist you?\n")
-        if show_pattern.search(chat):
-            if ingredients_pattern.search(chat):
-                print("\nHere I'll show you the ingredients list:")
-                view_list(ingredients)
-            elif tools_pattern.search(chat):
-                print("\nHere I'll show you the tools list:")
-                view_list(tools)
-            elif actions_pattern.search(chat):
-                print("\nHere I'll show you the actions list:")
-                view_list(actions)
-            elif steps_pattern.search(chat):
-                print("\nHere I'll show you the steps list:")
-                view_list(steps)
-
-        elif how_to_pattern.search(chat):
-            how_to_query = chat[how_to_pattern.search(chat).end():]
-            print("Here is how you can do that!\n")
-            how_to_url = build_url(how_to_query.strip('.?!'), 'youtube')
-            print(how_to_url)
-
-        elif what_is_pattern.search(chat):
-            print("Here is what I've found!\n")
-            format_url = build_url(chat.strip('.?!'), 'google')
-            print(format_url)
+        search_patterns(chat)
 
 if __name__ == "__main__":
     main()
