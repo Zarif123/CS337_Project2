@@ -3,6 +3,8 @@ import re
 
 import requests
 from bs4 import BeautifulSoup
+from helper_constants import *
+from helper_functions import *
 
 def extract_recipe_details(url):
 
@@ -19,8 +21,17 @@ def extract_recipe_details(url):
 
     # extract numbers and materials
     ingredients = []
+    quantity_pattern = re.compile('|'.join(unicode_fractions.keys()), re.IGNORECASE)
     for item in ingredients_list_items:
         quantity = item.find("span", {"data-ingredient-quantity": "true"}).get_text(strip=True)
+        if quantity_pattern.search(quantity):
+            frac = quantity_pattern.search(quantity).group(0)
+            if len(quantity) == 3:
+                whole = float(quantity[0])
+                dec = unicode_fractions[frac]
+                quantity = whole + dec
+            elif len(quantity) == 1:
+                quantity = unicode_fractions[frac]
         unit = item.find("span", {"data-ingredient-unit": "true"}).get_text(strip=True)
         name = item.find("span", {"data-ingredient-name": "true"}).get_text(strip=True)
         ingredients.append(f"{quantity} {unit} {name}".strip())
@@ -42,58 +53,6 @@ def extract_recipe_details(url):
             file.write(f"{ingredient}\n")
 
     return True
-
-
-def get_tools():
-    kitchen_tools = []
-    with open("data/steps.txt", 'r', encoding='utf-8') as file:
-        steps = file.readlines()
-    with open("data/Kitchentools.txt", 'r', encoding='utf-8') as file:
-        tools = file.readlines()
-        for tool in tools:
-            kitchen_tools.append(tool[:-1].lower())
-
-    # print(kitchen_tools)
-    result = []
-    for step in steps:
-        tools_found = set(re.findall('|'.join(kitchen_tools), step))
-        for tool in tools_found:
-            result.append(tool)
-
-    with open("data/tools.txt", "w", encoding='utf-8') as file:
-        for tool in result:
-            file.write(f"{tool}\n")
-
-    return result
-    # print(result)
-
-def get_actions():
-    kitchen_actions = []
-    with open("data/steps.txt", 'r', encoding='utf-8') as file:
-        steps = file.readlines()
-    with open("data/Kitchenactions.txt", 'r', encoding='utf-8') as file:
-        actions = file.readlines()
-        for action in actions:
-            kitchen_actions.append(action[:-1].lower())
-
-    result = []
-    for step in steps:
-        actions_found = set(re.findall('|'.join(kitchen_actions), step))
-        for action in actions_found:
-            result.append(action)
-
-    with open("data/actions.txt", "w", encoding='utf-8') as file:
-        for action in result:
-            file.write(f"{action}\n")
-    return result
-
-def get_ingredients():
-    with open("data/ingredients.txt", "r", encoding='utf-8') as file:
-        return file.read().splitlines() 
-    
-def get_steps():
-    with open("data/steps.txt", "r", encoding='utf-8') as file:
-        return file.read().splitlines()
 
 # if __name__ == '__main__':
 #     extract_recipe_details("https://www.allrecipes.com/miso-noodle-soup-in-a-jar-recipe-8350566")

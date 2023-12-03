@@ -1,6 +1,7 @@
 from step import *
 from scraper import *
 from helper_functions import *
+from transform import *
 
 def main():
     query = ""
@@ -23,12 +24,13 @@ def main():
 
     in_query_mode = True
     while in_query_mode:
-        print("1 - View the ingredients")
+        print("\n1 - View the ingredients")
         print("2 - View the steps")
         print("3 - View the tools needed")
         print("4 - View the actions performed")
         print("5 - Step through the recipe")
-        print("6 - Free form chat (Accepts less structured queries)")
+        print("6 - Transform the recipe")
+        print("7 - Free form chat (Accepts less structured queries)")
 
         query = input("You can select the corresponding number for each query\n")
         if query == "1":
@@ -47,6 +49,13 @@ def main():
             print("\nI can help you walk through the steps here!")
             step(ingredients, steps, tools, actions)
         elif query == "6":
+            print('\nI can help you transform the recipe!')
+            print("You can change the serving size by saying: [halve, double, triple, quadruple, (any float)] the recipe")
+            print("You can make the recipe vegetarian by saying: make it vegetarian")
+            print("You can make the recipe use Chinese ingredients by saying: make it Chinese")
+            transform_type = input("\nHow would you like to transform the recipe?\n")
+            transform(transform_type)
+        elif query == "7":
             print("\nYou've enabled free form chat!")
             print("You type out questions in sentences rather than entering numbers now")
             in_query_mode = False

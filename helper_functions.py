@@ -8,6 +8,18 @@ def view_list(recipe_item):
 def seconds_to_minutes(sec):
     return sec / 60
 
+def replace_numbers(text, frac):
+    number_pattern = re.compile(r'\b\d+(\.\d+)?\b')
+
+    for i in range(len(text)):
+        found_num = number_pattern.search(text[i])
+        if found_num:
+            original = found_num.group(0)
+            new = str(float(original) * frac)
+            text[i] = text[i].replace(original, new)
+
+    return text
+
 def build_url(query, website):
     formatted_query = "+".join(query.split())
     if website == "youtube":
@@ -28,6 +40,60 @@ def search_string(word_list, info):
             if word == token:
                 return word
     return False
+
+def get_tools():
+    kitchen_tools = []
+    with open("data/steps.txt", 'r', encoding='utf-8') as file:
+        steps = file.readlines()
+    with open("data/Kitchentools.txt", 'r', encoding='utf-8') as file:
+        tools = file.readlines()
+        for tool in tools:
+            kitchen_tools.append(tool[:-1].lower())
+
+    # print(kitchen_tools)
+    result = set()
+    tool_pattern = re.compile('|'.join(kitchen_tools), re.IGNORECASE)
+    for step in steps:
+        tools_found = set(tool_pattern.findall(step))
+        for tool in tools_found:
+            result.add(tool)
+
+    with open("data/tools.txt", "w", encoding='utf-8') as file:
+        for tool in result:
+            file.write(f"{tool}\n")
+
+    return result
+    # print(result)
+
+def get_actions():
+    kitchen_actions = []
+    with open("data/steps.txt", 'r', encoding='utf-8') as file:
+        steps = file.readlines()
+    with open("data/Kitchenactions.txt", 'r', encoding='utf-8') as file:
+        actions = file.readlines()
+        for action in actions:
+            kitchen_actions.append(action[:-1].lower())
+
+    result = set()
+    action_pattern = re.compile('|'.join(kitchen_actions), re.IGNORECASE)
+    for step in steps:
+        actions_found = action_pattern.findall(step)
+        for action in actions_found:
+            result.add(action)
+
+    with open("data/actions.txt", "w", encoding='utf-8') as file:
+        for action in result:
+            file.write(f"{action}\n")
+    return result
+
+def get_ingredients():
+    with open("data/ingredients.txt", "r", encoding='utf-8') as file:
+        return file.read().splitlines() 
+    
+def get_steps():
+    with open("data/steps.txt", "r", encoding='utf-8') as file:
+        return file.read().splitlines()
+
 
 def search_patterns(chat, ingredients, steps, tools, actions):
     # Search patterns

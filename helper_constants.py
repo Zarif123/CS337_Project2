@@ -62,3 +62,35 @@ cooking_measurements = {
 }
 
 temperature_words = {'low','medium', 'medium-high', 'medium-low', 'high'}
+
+unicode_fractions = {
+    '½': 0.5,
+    '⅓': 1/3,
+    '⅔': 2/3,
+    '¼': 0.25,
+    '¾': 0.75,
+    '⅕': 1/5,
+    '⅖': 2/5,
+    '⅗': 3/5,
+    '⅘': 4/5,
+    '⅙': 1/6,
+    '⅚': 5/6,
+    '⅛': 0.125,
+    '⅜': 3/8,
+    '⅝': 5/8,
+    '⅞': 7/8,
+}
+
+fractional_words = {
+    'halve': 0.5,
+    'half': 0.5,
+    'double': 2.0,
+    'triple': 3.0,
+    'quadruple': 4.0,
+    'quintuple': 5.0,
+    'sextuple': 6.0,
+    'septuple': 7.0,
+    'octuple': 8.0,
+    'nonuple': 9.0,
+    'decuple': 10.0,
+}
