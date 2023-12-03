@@ -57,7 +57,7 @@ def main():
     in_chat_mode = True
     while in_chat_mode:
         chat = input("\nHow can I assist you?\n")
-        search_patterns(chat)
+        search_patterns(chat, ingredients, steps, tools, actions)
 
 if __name__ == "__main__":
     main()

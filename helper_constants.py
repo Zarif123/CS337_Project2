@@ -31,3 +31,32 @@ time_map = {
 }
 
 time_words = {'seconds', 'second', 'minutes', 'minute', 'hour', 'hours', 'day', 'days'}
+
+cooking_measurements = {
+    'teaspoon', 'teaspoons', 'tsp', 'tsps',
+    'tablespoon', 'tablespoons', 'tbsp', 'tbsps',
+    'fluid ounce', 'fluid ounces', 'fl oz', 'fl ozs',
+    'cup', 'cups',
+    'pint', 'pints',
+    'quart', 'quarts',
+    'gallon', 'gallons',
+    'milliliter', 'milliliters', 'ml', 'mls',
+    'liter', 'liters', 'L', 'Ls',
+    'gram', 'grams', 'g', 'gs',
+    'kilogram', 'kilograms', 'kg', 'kgs',
+    'ounce', 'ounces', 'oz', 'ozs',
+    'pound', 'pounds', 'lb', 'lbs',
+    'pinch', 'pinches',
+    'dash', 'dashes',
+    'inch', 'inches',
+    'cm', 'cms', 'centimeter', 'centimeters',
+    'millimeter', 'millimeters', 'mm', 'mms',
+    'degree', 'degrees', '°',
+    'Fahrenheit', 'Celsius',
+    'slice', 'slices',
+    'piece', 'pieces',
+    'package', 'packages',
+    'can', 'cans',
+    'jar', 'jars',
+    'bottle', 'bottles'
+}

@@ -78,3 +78,8 @@ Clarify
 Emulsify
 Render
 Velvet
+Place
+Dissolve
+Heat
+Stir
+Season
