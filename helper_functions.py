@@ -22,9 +22,16 @@ def search_list(word, info):
             return token
     return False
 
+def search_string(word_list, info):
+    for word in word_list:
+        for token in info.split():
+            if word == token:
+                return word
+    return False
+
 def search_patterns(chat, ingredients, steps, tools, actions):
     # Search patterns
-    show_pattern = re.compile(r'\b(show|what)(?!\s+is)\b', re.IGNORECASE)
+    show_pattern = re.compile(r'\b(show|what)(?!\s+is)(?! temperature\b)\b', re.IGNORECASE)
     ingredients_pattern = re.compile(r'\bingredients\b', re.IGNORECASE)
     tools_pattern = re.compile(r'\btools\b', re.IGNORECASE)
     actions_pattern = re.compile(r'\bactions\b', re.IGNORECASE)
@@ -62,8 +69,11 @@ def search_patterns(chat, ingredients, steps, tools, actions):
     elif how_much_pattern.search(chat):
         ingredient = how_much_pattern.search(chat).group(1)
         how_much = search_list(ingredient, ingredients)
-        print("Here is how much you need!\n")
-        print(how_much)
+        if how_much:
+            print("Here is how much you need!\n")
+            print(how_much)
+        else:
+            print("There are no measurments for that in this recipe.\n")
 
 def step_util(ingredients, steps, tools, actions, stepping):
     # Step Patterns
@@ -77,6 +87,8 @@ def step_util(ingredients, steps, tools, actions, stepping):
     when_done_pattern = re.compile(r'\bwhen is (it|this) (done|complete|finished)\b', re.IGNORECASE)
     until_pattern = re.compile(r'until (.*?)(?=\.)', re.IGNORECASE)
     how_do_that_pattern = re.compile(r'\bhow (do|can|could) I do that\b', re.IGNORECASE)
+    what_temp_pattern = re.compile(r'\bwhat temperature\b', re.IGNORECASE)
+    degree_pattern = re.compile(r'(\b\w+\b)\s+degrees\s+(\b\w+\b)', re.IGNORECASE)
 
     index = 0
     print("Here is the first step:")
@@ -133,7 +145,7 @@ def step_util(ingredients, steps, tools, actions, stepping):
                 for match in until_matches:
                     until += "until " + match + '\n'
 
-            print(f"This step takes an average of {total_time} minutes")
+            print(f"This step takes an average of {total_time} minutes\n")
             if len(until) > 0:
                 print(f"{until}")
 
@@ -142,6 +154,19 @@ def step_util(ingredients, steps, tools, actions, stepping):
             print("Here is what I've found!\n")
             format_url = build_url(how_do_that_query.strip('.?!'), 'google')
             print(format_url)
+        
+        elif what_temp_pattern.search(chat):
+            degrees = degree_pattern.search(chat)
+            if degrees:
+                num, scale = degrees[0]
+                print(f"{num} degrees {scale}\n")
+                continue
+            else:
+                temp = search_string(temperature_words, steps[index])
+                if temp:
+                    print(f"{temp} heat\n")
+                    continue
+            print("There is no temperature info for this step.\n")
 
         elif chat.lower() == "q":
             print('\nExiting step mode')

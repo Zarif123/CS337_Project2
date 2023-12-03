@@ -60,3 +60,5 @@ cooking_measurements = {
     'jar', 'jars',
     'bottle', 'bottles'
 }
+
+temperature_words = {'low','medium', 'medium-high', 'medium-low', 'high'}
