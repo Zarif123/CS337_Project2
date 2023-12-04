@@ -8,7 +8,7 @@ def main():
     asking_url = True
     print("Hello, if you give me a URL for a recipe from AllRecipes.com, I can walk you through it!")
     while asking_url:
-        url = "https://www.allrecipes.com/recipe/281219/skillet-chicken-thighs-with-carrots-and-potatoes/"#input("Please specify your URL here: ")
+        url = input("Please specify your URL here: ")
         if extract_recipe_details(url) == False:
             print("Uh oh there was an error retrieving your recipe, please enter a valid url!")
             continue
