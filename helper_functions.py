@@ -20,6 +20,18 @@ def replace_numbers(text, frac):
 
     return text
 
+def replace_cuisine(text, subs):
+    pattern = re.compile('|'.join(subs.keys()), re.IGNORECASE)
+    
+    for i in range(len(text)):
+        found_sub = pattern.search(text[i])
+        if found_sub:
+            original = found_sub.group(0)
+            new = subs[original]
+            text[i] = text[i].replace(original, new)
+
+    return text
+
 def build_url(query, website):
     formatted_query = "+".join(query.split())
     if website == "youtube":
@@ -106,6 +118,8 @@ def search_patterns(chat, ingredients, steps, tools, actions):
     how_to_pattern = re.compile(r'\bhow (do|can|could) I\b(?!(.*\bthat\b))', re.IGNORECASE)
     what_is_pattern = re.compile(r'\bwhat is\b', re.IGNORECASE)
     how_much_pattern = re.compile(r'\bhow much(?:of\s+)?(.*?)\s+do\b', re.IGNORECASE)
+
+    transform(chat)
 
     if show_pattern.search(chat):
         if ingredients_pattern.search(chat):
@@ -236,4 +250,64 @@ def step_util(ingredients, steps, tools, actions, stepping):
 
         elif chat.lower() == "q":
             print('\nExiting step mode')
-            stepping = False            
+            stepping = False
+
+def transform(chat):
+    # Transform patterns
+    change_size_pattern = re.compile(r'\b\s*the recipe\s*\b', re.IGNORECASE)
+    veg_pattern = re.compile(r'\b\s*vegetarian\s*\b', re.IGNORECASE)
+    chinese_pattern = re.compile(r'\b\s*chinese\s*\b', re.IGNORECASE)
+    mexican_pattern = re.compile(r'\b\s*mexican\s*\b', re.IGNORECASE)
+
+    if change_size_pattern.search(chat):
+        frac = chat.split()[0]
+        try:
+            frac = fractional_words[frac]
+        except:
+            try:
+                frac = float(frac)
+            except:
+                pass
+        if type(frac) == float:
+            with open("data/ingredients.txt", "r", encoding='utf-8') as file:
+                ingredients = file.readlines()
+            ingredients = replace_numbers(ingredients, frac)
+            with open("data/ingredients.txt", 'w', encoding='utf-8') as file:
+                for ing in ingredients:
+                    file.write(f"{ing}")
+
+            print("\nI've changed the serving size of the recipe!")
+            view_list(get_ingredients())
+
+    elif veg_pattern.search(chat):
+        with open("data/ingredients.txt", "r", encoding='utf-8') as file:
+            ingredients = file.readlines()
+        ingredients = replace_cuisine(ingredients, meat_substitutes)
+        with open("data/ingredients.txt", 'w', encoding='utf-8') as file:
+            for ing in ingredients:
+                file.write(f"{ing}")
+
+        print("\nI've made the recipe vegetarian!")
+        view_list(get_ingredients())
+
+    elif chinese_pattern.search(chat):
+        with open("data/ingredients.txt", "r", encoding='utf-8') as file:
+            ingredients = file.readlines()
+        ingredients = replace_cuisine(ingredients, chinese_subs)
+        with open("data/ingredients.txt", 'w', encoding='utf-8') as file:
+            for ing in ingredients:
+                file.write(f"{ing}")
+
+        print("\nI've made the recipe Chinese!")
+        view_list(get_ingredients())
+
+    elif mexican_pattern.search(chat):
+        with open("data/ingredients.txt", "r", encoding='utf-8') as file:
+            ingredients = file.readlines()
+        ingredients = replace_cuisine(ingredients, mexican_subs)
+        with open("data/ingredients.txt", 'w', encoding='utf-8') as file:
+            for ing in ingredients:
+                file.write(f"{ing}")
+
+        print("\nI've made the recipe mexican!")
+        view_list(get_ingredients())

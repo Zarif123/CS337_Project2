@@ -1,7 +1,6 @@
 from step import *
 from scraper import *
 from helper_functions import *
-from transform import *
 
 def main():
     query = ""

@@ -1,6 +1,6 @@
-Heat
-Dissolve
-Place
 Stir
-Seaso
+Place
+Dissolve
 heat
+Heat
+Seaso
