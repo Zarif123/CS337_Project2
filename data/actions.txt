@@ -1,6 +1,6 @@
 Stir
-Place
 Dissolve
-heat
 Heat
 Seaso
+Place
+heat
